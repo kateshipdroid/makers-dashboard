@@ -9,8 +9,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0f1117;
-            color: #e4e4e7;
+            background: #ffffff;
+            color: #37352f;
             min-height: 100vh;
         }
 
@@ -18,13 +18,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 24px 32px;
-            border-bottom: 1px solid #1e1e2e;
+            padding: 20px 40px;
+            border-bottom: 1px solid #e9e9e7;
         }
         .header h1 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-            color: #fff;
+            color: #37352f;
         }
         .header-actions {
             display: flex;
@@ -32,70 +32,68 @@
         }
 
         .btn {
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid #2e2e3e;
-            background: #1a1a2e;
-            color: #e4e4e7;
+            padding: 6px 14px;
+            border-radius: 4px;
+            border: 1px solid #e9e9e7;
+            background: #ffffff;
+            color: #37352f;
             cursor: pointer;
             font-size: 13px;
-            transition: all 0.2s;
+            transition: background 0.15s;
         }
-        .btn:hover { background: #2a2a3e; border-color: #4e4e6e; }
-        .btn-primary { background: #6366f1; border-color: #6366f1; color: #fff; }
-        .btn-primary:hover { background: #5558e6; }
+        .btn:hover { background: #f7f6f3; }
+        .btn-primary { background: #37352f; border-color: #37352f; color: #ffffff; }
+        .btn-primary:hover { background: #2f2d28; }
 
-        .container { padding: 24px 32px; max-width: 1200px; margin: 0 auto; }
+        .container { padding: 32px 40px; max-width: 1100px; margin: 0 auto; }
 
         /* Metric cards */
         .metrics {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 12px;
+            margin-bottom: 32px;
         }
         .metric-card {
-            background: #1a1a2e;
-            border: 1px solid #2e2e3e;
-            border-radius: 12px;
-            padding: 20px;
+            padding: 16px 18px;
+            border: 1px solid #e9e9e7;
+            border-radius: 4px;
         }
         .metric-label {
-            font-size: 12px;
-            color: #71717a;
+            font-size: 11px;
+            color: #9b9a97;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .metric-value {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
-            color: #fff;
+            color: #37352f;
         }
         .metric-sub {
-            font-size: 12px;
-            color: #71717a;
-            margin-top: 4px;
+            font-size: 11px;
+            color: #9b9a97;
+            margin-top: 2px;
         }
 
         /* Charts */
         .charts {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 16px;
+            gap: 12px;
             margin-bottom: 24px;
         }
         .chart-card {
-            background: #1a1a2e;
-            border: 1px solid #2e2e3e;
-            border-radius: 12px;
+            border: 1px solid #e9e9e7;
+            border-radius: 4px;
             padding: 20px;
         }
         .chart-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             margin-bottom: 16px;
-            color: #a1a1aa;
+            color: #9b9a97;
         }
 
         /* Segments */
@@ -104,7 +102,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 0;
-            border-bottom: 1px solid #1e1e2e;
+            border-bottom: 1px solid #f1f1ef;
         }
         .segment-row:last-child { border-bottom: none; }
         .segment-dot {
@@ -114,14 +112,13 @@
             display: inline-block;
             margin-right: 8px;
         }
-        .segment-name { font-size: 14px; }
-        .segment-count { font-size: 14px; font-weight: 600; color: #fff; }
+        .segment-name { font-size: 14px; color: #37352f; }
+        .segment-count { font-size: 14px; font-weight: 600; color: #37352f; }
 
         /* Digest */
         .digest-card {
-            background: #1a1a2e;
-            border: 1px solid #2e2e3e;
-            border-radius: 12px;
+            border: 1px solid #e9e9e7;
+            border-radius: 4px;
             padding: 24px;
             margin-bottom: 24px;
         }
@@ -129,9 +126,10 @@
             font-size: 14px;
             line-height: 1.7;
             white-space: pre-wrap;
+            color: #37352f;
         }
         .digest-loading {
-            color: #71717a;
+            color: #9b9a97;
             font-style: italic;
         }
 
@@ -139,17 +137,17 @@
         .bottom-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 12px;
         }
 
         /* Empty state */
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-            color: #71717a;
+            padding: 80px 20px;
+            color: #9b9a97;
         }
-        .empty-state h2 { color: #a1a1aa; margin-bottom: 12px; }
-        .empty-state p { margin-bottom: 24px; }
+        .empty-state h2 { color: #37352f; margin-bottom: 8px; font-size: 18px; }
+        .empty-state p { margin-bottom: 24px; font-size: 14px; }
 
         /* File upload */
         .upload-hidden { display: none; }
@@ -159,6 +157,7 @@
             .charts { grid-template-columns: 1fr; }
             .bottom-row { grid-template-columns: 1fr; }
             .container { padding: 16px; }
+            .header { padding: 16px; }
         }
     </style>
 </head>
@@ -176,7 +175,7 @@
 <div class="container">
     <div id="emptyState" class="empty-state">
         <h2>Нет данных</h2>
-        <p>Загрузите CSV из бота оплаты или нажмите "Тестовые данные" для демо</p>
+        <p>Загрузите CSV из бота оплаты или нажмите «Тестовые данные» для демо</p>
         <button class="btn btn-primary" onclick="loadDemoData()">Заполнить тестовыми данными</button>
     </div>
 
@@ -238,7 +237,7 @@
                 <button class="btn" onclick="loadDigest()">Обновить</button>
             </div>
             <div class="digest-content" id="digest">
-                <span class="digest-loading">Нажмите "Обновить" для генерации AI-анализа</span>
+                <span class="digest-loading">Нажмите «Обновить» для генерации AI-анализа</span>
             </div>
         </div>
     </div>
@@ -250,10 +249,10 @@
     let growthChartInstance = null;
 
     const SEGMENT_COLORS = {
-        new: '#22c55e',
-        active: '#6366f1',
-        first_renewal: '#f59e0b',
-        churned: '#ef4444',
+        new: '#2eaadc',
+        active: '#37352f',
+        first_renewal: '#cb912f',
+        churned: '#e03e3e',
     };
 
     const SEGMENT_LABELS = {
@@ -261,6 +260,11 @@
         active: 'Активные',
         first_renewal: 'Скоро продление',
         churned: 'Отток',
+    };
+
+    const CHART_DEFAULTS = {
+        gridColor: '#f1f1ef',
+        tickColor: '#9b9a97',
     };
 
     function formatMoney(n) {
@@ -322,11 +326,12 @@
                 datasets: [{
                     label: 'MRR',
                     data: chartsRes.mrr,
-                    borderColor: '#6366f1',
-                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    borderColor: '#37352f',
+                    backgroundColor: 'rgba(55, 53, 47, 0.04)',
                     fill: true,
                     tension: 0.3,
-                    pointRadius: 4,
+                    pointRadius: 3,
+                    borderWidth: 2,
                 }]
             },
             options: {
@@ -341,10 +346,10 @@
                 },
                 scales: {
                     y: {
-                        ticks: { callback: v => (v/1000) + 'K', color: '#71717a' },
-                        grid: { color: '#1e1e2e' },
+                        ticks: { callback: v => (v/1000) + 'K', color: CHART_DEFAULTS.tickColor },
+                        grid: { color: CHART_DEFAULTS.gridColor },
                     },
-                    x: { ticks: { color: '#71717a' }, grid: { display: false } }
+                    x: { ticks: { color: CHART_DEFAULTS.tickColor }, grid: { display: false } }
                 }
             }
         });
@@ -358,8 +363,8 @@
                 datasets: [{
                     label: 'Новых',
                     data: chartsRes.new_by_week,
-                    backgroundColor: '#22c55e',
-                    borderRadius: 4,
+                    backgroundColor: '#2eaadc',
+                    borderRadius: 3,
                 }]
             },
             options: {
@@ -367,10 +372,10 @@
                 plugins: { legend: { display: false } },
                 scales: {
                     y: {
-                        ticks: { color: '#71717a' },
-                        grid: { color: '#1e1e2e' },
+                        ticks: { color: CHART_DEFAULTS.tickColor },
+                        grid: { color: CHART_DEFAULTS.gridColor },
                     },
-                    x: { ticks: { color: '#71717a' }, grid: { display: false } }
+                    x: { ticks: { color: CHART_DEFAULTS.tickColor }, grid: { display: false } }
                 }
             }
         });
@@ -384,11 +389,12 @@
                 datasets: [{
                     label: 'Активных',
                     data: chartsRes.active_by_week,
-                    borderColor: '#f59e0b',
-                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    borderColor: '#cb912f',
+                    backgroundColor: 'rgba(203, 145, 47, 0.06)',
                     fill: true,
                     tension: 0.3,
-                    pointRadius: 4,
+                    pointRadius: 3,
+                    borderWidth: 2,
                 }]
             },
             options: {
@@ -396,10 +402,10 @@
                 plugins: { legend: { display: false } },
                 scales: {
                     y: {
-                        ticks: { color: '#71717a' },
-                        grid: { color: '#1e1e2e' },
+                        ticks: { color: CHART_DEFAULTS.tickColor },
+                        grid: { color: CHART_DEFAULTS.gridColor },
                     },
-                    x: { ticks: { color: '#71717a' }, grid: { display: false } }
+                    x: { ticks: { color: CHART_DEFAULTS.tickColor }, grid: { display: false } }
                 }
             }
         });
@@ -412,7 +418,7 @@
             row.className = 'segment-row';
             row.innerHTML = `
                 <span class="segment-name">
-                    <span class="segment-dot" style="background: ${SEGMENT_COLORS[key] || '#71717a'}"></span>
+                    <span class="segment-dot" style="background: ${SEGMENT_COLORS[key] || '#9b9a97'}"></span>
                     ${SEGMENT_LABELS[key] || key}
                 </span>
                 <span class="segment-count">${count}</span>
