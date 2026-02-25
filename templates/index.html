@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makers Club — Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f1117;
+            color: #e4e4e7;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 32px;
+            border-bottom: 1px solid #1e1e2e;
+        }
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #2e2e3e;
+            background: #1a1a2e;
+            color: #e4e4e7;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: #2a2a3e; border-color: #4e4e6e; }
+        .btn-primary { background: #6366f1; border-color: #6366f1; color: #fff; }
+        .btn-primary:hover { background: #5558e6; }
+
+        .container { padding: 24px 32px; max-width: 1200px; margin: 0 auto; }
+
+        /* Metric cards */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .metric-card {
+            background: #1a1a2e;
+            border: 1px solid #2e2e3e;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #71717a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .metric-sub {
+            font-size: 12px;
+            color: #71717a;
+            margin-top: 4px;
+        }
+
+        /* Charts */
+        .charts {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .chart-card {
+            background: #1a1a2e;
+            border: 1px solid #2e2e3e;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .chart-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #a1a1aa;
+        }
+
+        /* Segments */
+        .segment-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #1e1e2e;
+        }
+        .segment-row:last-child { border-bottom: none; }
+        .segment-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .segment-name { font-size: 14px; }
+        .segment-count { font-size: 14px; font-weight: 600; color: #fff; }
+
+        /* Digest */
+        .digest-card {
+            background: #1a1a2e;
+            border: 1px solid #2e2e3e;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .digest-content {
+            font-size: 14px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+        .digest-loading {
+            color: #71717a;
+            font-style: italic;
+        }
+
+        /* Bottom row */
+        .bottom-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #71717a;
+        }
+        .empty-state h2 { color: #a1a1aa; margin-bottom: 12px; }
+        .empty-state p { margin-bottom: 24px; }
+
+        /* File upload */
+        .upload-hidden { display: none; }
+
+        @media (max-width: 768px) {
+            .metrics { grid-template-columns: repeat(2, 1fr); }
+            .charts { grid-template-columns: 1fr; }
+            .bottom-row { grid-template-columns: 1fr; }
+            .container { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Makers Club Analytics</h1>
+    <div class="header-actions">
+        <input type="file" id="csvInput" class="upload-hidden" accept=".csv">
+        <button class="btn" onclick="document.getElementById('csvInput').click()">Загрузить CSV</button>
+        <button class="btn btn-primary" onclick="loadDemoData()">Тестовые данные</button>
+    </div>
+</div>
+
+<div class="container">
+    <div id="emptyState" class="empty-state">
+        <h2>Нет данных</h2>
+        <p>Загрузите CSV из бота оплаты или нажмите "Тестовые данные" для демо</p>
+        <button class="btn btn-primary" onclick="loadDemoData()">Заполнить тестовыми данными</button>
+    </div>
+
+    <div id="dashboard" style="display: none;">
+        <!-- Metrics -->
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-label">Активных</div>
+                <div class="metric-value" id="m-active">—</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">MRR</div>
+                <div class="metric-value" id="m-mrr">—</div>
+                <div class="metric-sub">ежемесячная выручка</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Новых за неделю</div>
+                <div class="metric-value" id="m-new">—</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Отток</div>
+                <div class="metric-value" id="m-churned">—</div>
+                <div class="metric-sub" id="m-churned-sub"></div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Retention M1</div>
+                <div class="metric-value" id="m-retention">—</div>
+                <div class="metric-sub">продлили после 1 мес</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts">
+            <div class="chart-card">
+                <div class="chart-title">MRR по неделям</div>
+                <canvas id="mrrChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Сегменты</div>
+                <div id="segments"></div>
+            </div>
+        </div>
+
+        <div class="bottom-row">
+            <div class="chart-card">
+                <div class="chart-title">Новые подписки по неделям</div>
+                <canvas id="newChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Рост базы</div>
+                <canvas id="growthChart"></canvas>
+            </div>
+        </div>
+
+        <!-- AI Digest -->
+        <div class="digest-card" style="margin-top: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div class="chart-title" style="margin-bottom: 0;">AI-дайджест</div>
+                <button class="btn" onclick="loadDigest()">Обновить</button>
+            </div>
+            <div class="digest-content" id="digest">
+                <span class="digest-loading">Нажмите "Обновить" для генерации AI-анализа</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let mrrChartInstance = null;
+    let newChartInstance = null;
+    let growthChartInstance = null;
+
+    const SEGMENT_COLORS = {
+        new: '#22c55e',
+        active: '#6366f1',
+        first_renewal: '#f59e0b',
+        churned: '#ef4444',
+    };
+
+    const SEGMENT_LABELS = {
+        new: 'Новые (эта неделя)',
+        active: 'Активные',
+        first_renewal: 'Скоро продление',
+        churned: 'Отток',
+    };
+
+    function formatMoney(n) {
+        return new Intl.NumberFormat('ru-RU').format(n) + ' ₽';
+    }
+
+    function formatWeekLabel(dateStr) {
+        const d = new Date(dateStr);
+        const day = d.getDate();
+        const months = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+        return day + ' ' + months[d.getMonth()];
+    }
+
+    async function loadDemoData() {
+        const btn = event.target;
+        btn.textContent = 'Загрузка...';
+        btn.disabled = true;
+        await fetch('/api/demo-data', { method: 'POST' });
+        btn.textContent = 'Тестовые данные';
+        btn.disabled = false;
+        await refreshDashboard();
+    }
+
+    async function refreshDashboard() {
+        const [metricsRes, chartsRes] = await Promise.all([
+            fetch('/api/metrics').then(r => r.json()),
+            fetch('/api/charts').then(r => r.json()),
+        ]);
+
+        if (metricsRes.active === 0 && metricsRes.total_ever === 0) {
+            document.getElementById('emptyState').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            return;
+        }
+
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+
+        // Update metrics
+        document.getElementById('m-active').textContent = metricsRes.active;
+        document.getElementById('m-mrr').textContent = formatMoney(metricsRes.mrr);
+        document.getElementById('m-new').textContent = '+' + metricsRes.new_this_week;
+        document.getElementById('m-churned').textContent = metricsRes.churned;
+        document.getElementById('m-retention').textContent = metricsRes.retention_m1 + '%';
+
+        const churnRate = metricsRes.total_ever > 0
+            ? (metricsRes.churned / metricsRes.total_ever * 100).toFixed(1) : 0;
+        document.getElementById('m-churned-sub').textContent = churnRate + '% от всех';
+
+        // Update charts
+        const labels = chartsRes.labels.map(formatWeekLabel);
+
+        // MRR chart
+        if (mrrChartInstance) mrrChartInstance.destroy();
+        mrrChartInstance = new Chart(document.getElementById('mrrChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'MRR',
+                    data: chartsRes.mrr,
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => formatMoney(ctx.raw)
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: { callback: v => (v/1000) + 'K', color: '#71717a' },
+                        grid: { color: '#1e1e2e' },
+                    },
+                    x: { ticks: { color: '#71717a' }, grid: { display: false } }
+                }
+            }
+        });
+
+        // New subscriptions chart
+        if (newChartInstance) newChartInstance.destroy();
+        newChartInstance = new Chart(document.getElementById('newChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Новых',
+                    data: chartsRes.new_by_week,
+                    backgroundColor: '#22c55e',
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        ticks: { color: '#71717a' },
+                        grid: { color: '#1e1e2e' },
+                    },
+                    x: { ticks: { color: '#71717a' }, grid: { display: false } }
+                }
+            }
+        });
+
+        // Growth chart
+        if (growthChartInstance) growthChartInstance.destroy();
+        growthChartInstance = new Chart(document.getElementById('growthChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Активных',
+                    data: chartsRes.active_by_week,
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        ticks: { color: '#71717a' },
+                        grid: { color: '#1e1e2e' },
+                    },
+                    x: { ticks: { color: '#71717a' }, grid: { display: false } }
+                }
+            }
+        });
+
+        // Segments
+        const segEl = document.getElementById('segments');
+        segEl.innerHTML = '';
+        for (const [key, count] of Object.entries(chartsRes.segments)) {
+            const row = document.createElement('div');
+            row.className = 'segment-row';
+            row.innerHTML = `
+                <span class="segment-name">
+                    <span class="segment-dot" style="background: ${SEGMENT_COLORS[key] || '#71717a'}"></span>
+                    ${SEGMENT_LABELS[key] || key}
+                </span>
+                <span class="segment-count">${count}</span>
+            `;
+            segEl.appendChild(row);
+        }
+    }
+
+    async function loadDigest() {
+        const el = document.getElementById('digest');
+        el.innerHTML = '<span class="digest-loading">Генерирую анализ...</span>';
+        const res = await fetch('/api/digest').then(r => r.json());
+        el.innerHTML = res.digest
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\n/g, '<br>');
+    }
+
+    // CSV upload handler
+    document.getElementById('csvInput').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('file', file);
+        await fetch('/api/upload-csv', { method: 'POST', body: formData });
+        await refreshDashboard();
+        e.target.value = '';
+    });
+
+    // Initial load
+    refreshDashboard();
+</script>
+
+</body>
+</html>
